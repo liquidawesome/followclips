@@ -61,12 +61,12 @@ class User {
 		return $rsp['data'][0]['display_name'];
 	}
 	
-	public function following() {
+	public function clips() {
 		$id = $this->getId();
 		$after = '';
 		$users = array();
 		do {
-			$url = 'https://api.twitch.tv/helix/users/follows?from_id='.$id.'&after='.$after;
+			$url = 'https://api.twitch.tv/helix/users/follows?from_id='.$id.'&first=100&after='.$after;
 			
 			// Initiate cURL
 			$ch = curl_init($url);
@@ -86,7 +86,7 @@ class User {
 			curl_close($ch);
 			
 			/* Grabbing full header may not be necessary, but this dowhile loop has many queries of Twitch API that
-			 * can trigger the API Ratelimit. This is not good. Ratelimit header information is found in_array
+			 * can trigger the API Ratelimit. This is not good. Ratelimit header information is found in $rspHead as
 			 * Ratelimit-Limit, Ratelimit-Remaining, and Ratelimit-Reset
 			 * See: https://dev.twitch.tv/docs/api/guide/
 			 */
@@ -97,12 +97,13 @@ class User {
 			
 			foreach($rsp['data'] as $follow) {
 				$users[] = $follow['to_id'];
+				echo '<br/>',$follow['to_id'];
 			}
-			// TODO: Don't get all follows at once, find way to navigate, ~20/time
+			
 			$after = $rsp['pagination']['cursor'];
 			
 		} while(!empty($rsp['data']));
-		var_dump($users);
+		
 	}
 
 }
