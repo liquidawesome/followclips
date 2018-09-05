@@ -13,9 +13,6 @@ if (isset($_GET['name']) === true && empty($_GET['name']) === false) {
 	
 	$user->following();
 	
-	// Process data
-	//$id = $rsp['id'];
-	//var_dump($rsp);
 } else {
 	$entered = false;
 }
@@ -26,12 +23,12 @@ if (isset($_GET['name']) === true && empty($_GET['name']) === false) {
 	<h1>Your Followed User Clips</h1>
 	<?php if ($entered == false): ?>
 	<p>Enter your Twitch.tv username to continue:</p>
-	<?php else: ?>
-	<p>Welcome, <?php echo $user->getUsernameFromId($user->getId()); ?></p>
-	<?php endif; ?>
 	<form action="" method="get">
 	<input type="text" name="name"/>
 	<input type="submit" value="Continue..."/>
 	</form>
+	<?php else: ?>
+	<p>Top clips from users followed by <?php echo $username; ?>!</p>
+	<?php endif; ?>
 </body>
 </html>

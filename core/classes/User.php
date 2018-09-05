@@ -73,6 +73,7 @@ class User {
 			// Set cURL options
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Client-ID: usc7ke0v80ye96khi6jhia4w61i8yr'));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_HEADER, 1);
 			
 			// Execute request, decode json response into assoc array
 			$rsp = curl_exec($ch);
@@ -83,13 +84,20 @@ class User {
 			// Close cURL connection
 			curl_close($ch);
 			
+			/* Grabbing full header may not be necessary, but this dowhile loop has many queries of Twitch API that
+			 * can trigger the API Ratelimit. This is not good. Ratelimit header information is found in_array
+			 * Ratelimit-Limit, Ratelimit-Remaining, and Ratelimit-Reset
+			 * See: https://dev.twitch.tv/docs/api/guide/
+			 */
+			$rspFull = explode("\r\n\r\n",$rsp);
+			$rspHead = explode("\r\n",$rspFull[0]);
+			$rsp = $rspFull[1];
 			$rsp = json_decode($rsp,true);
-			//var_dump($rsp);
 			
 			foreach($rsp['data'] as $follow) {
 				$users[] = $follow['to_id'];
 			}
-			
+			// TODO: Don't get all follows at once, find way to navigate, ~20/time
 			$after = $rsp['pagination']['cursor'];
 			
 		} while(!empty($rsp['data']));
