@@ -30,5 +30,7 @@ if (isset($_GET['name']) === true && empty($_GET['name']) === false) {
 	<?php else: ?>
 	<p>Top clips from users followed by <?php echo $username; ?>!</p>
 	<?php endif; ?>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="js/actions.js"></script>
 </body>
 </html>
