@@ -1,17 +1,18 @@
 <?php
 ini_set('display_errors', 1);
 require 'core/init.php';
+//TODO: isset block should probably be moved to ajax.php. Try not to do much php in index file?
 if (isset($_GET['name']) === true && empty($_GET['name']) === false) {
 	$entered = true;
 	$username = htmlspecialchars($_GET['name']);
 	
 	$user = new User($username);
 	
-	if ($user->getId() !== null) {
-		echo 'ID: ',$user->getUsernameFromId($user->getId());
-	}
+	//if ($user->getId() !== null) {
+	//	echo 'ID: ',$user->getUsernameFromId($user->getId());
+	//}
 	
-	$user->following();
+	$user->clips();
 	
 } else {
 	$entered = false;
@@ -28,7 +29,7 @@ if (isset($_GET['name']) === true && empty($_GET['name']) === false) {
 	<input type="submit" value="Continue..."/>
 	</form>
 	<?php else: ?>
-	<p>Top clips from users followed by <?php echo $username; ?>!</p>
+	<p>Top clips from followed users!</p>
 	<?php endif; ?>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script src="js/actions.js"></script>

@@ -51,12 +51,12 @@ class User {
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Client-ID: usc7ke0v80ye96khi6jhia4w61i8yr'));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		
-		// Execute request, decode json response into assoc array
+		// Execute request
 		$rsp = curl_exec($ch);
 		
 		// Close cURL connection
 		curl_close($ch);
-		
+		// Decode json response into assoc array
 		$rsp = json_decode($rsp,true);
 		return $rsp['data'][0]['display_name'];
 	}
@@ -97,12 +97,36 @@ class User {
 			
 			foreach($rsp['data'] as $follow) {
 				$users[] = $follow['to_id'];
-				echo '<br/>',$follow['to_id'];
+				//echo '<br/>',$follow['to_id'];
 			}
 			
 			$after = $rsp['pagination']['cursor'];
 			
 		} while(!empty($rsp['data']));
+		
+		foreach($users as $user) {
+			$url = 'https://api.twitch.tv/helix/clips?broadcaster_id='.$user.'&after='.$after;
+			
+			// Initiate cURL
+			$ch = curl_init($url);
+			
+			// Set cURL options
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Client-ID: usc7ke0v80ye96khi6jhia4w61i8yr'));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			
+			// Execute request
+			$rsp = curl_exec($ch);
+			
+			// Get info for debug purposes
+			//$info = curl_getinfo($ch);
+			
+			// Close cURL connection
+			curl_close($ch);
+			// Decode json response into assoc array
+			$rsp = json_decode($rsp,true);
+			var_dump($rsp);
+			break;
+		}
 		
 	}
 
