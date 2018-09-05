@@ -23,6 +23,7 @@ class User {
 		
 		$rsp = json_decode($rsp,true);
 		
+		// TODO: Don't display PHP error when user is not found.
 		try {
 			if (array_key_exists(0, $rsp['data']) == true) {
 				$this->details = $rsp['data'][0];
